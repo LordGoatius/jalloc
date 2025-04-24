@@ -35,7 +35,7 @@ impl<'a> Jallocator {
         let ptr = unsafe { addr.add(self.size.get() + offset_align) } as *mut T;
         unsafe {
             ptr.write(t);
-            self.size.set(self.size.get() + layout.size());
+            self.size.set(self.size.get() + layout.size() + offset_align);
             &mut *ptr
         }
     }
