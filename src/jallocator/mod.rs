@@ -28,7 +28,11 @@ impl<'a> Jallocator {
             panic!("OOM");
         }
 
-        let ptr = unsafe { (*self.mem.as_ptr()).as_ptr().add(self.size.get()) } as *mut T;
+        let addr = unsafe { (*self.mem.as_ptr()).as_ptr() };
+
+        let offset_align = layout.align() - (addr as usize % layout.align());
+
+        let ptr = unsafe { addr.add(self.size.get() + offset_align) } as *mut T;
         unsafe {
             ptr.write(t);
             self.size.set(self.size.get() + layout.size());
